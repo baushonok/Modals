@@ -1,3 +1,3 @@
-import lightboxes from './modules/lightboxes';
+import lightbox from './components/lightbox/lightbox.init';
 
-lightboxes();
+lightbox();

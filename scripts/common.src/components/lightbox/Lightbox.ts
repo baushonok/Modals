@@ -42,15 +42,19 @@ export default class Lightbox
     private currentSlide: HTMLLIElement;
     /**/
     private amountOfSlides: number;
+    /**/
+    private srcMap: any;
 
     /**
      * Конструктор
      * @param {HTMLElement} container
      * @param {HTMLOListElement} previewsList
+     * @param {any} srcMap
      */
     public constructor(
         container: HTMLElement,
-        previewsList: HTMLOListElement
+        previewsList: HTMLOListElement,
+        srcMap: any
     )
     {
         let buttonClose: HTMLElement;
@@ -65,14 +69,7 @@ export default class Lightbox
         this.currentSlide = null;
         this.boundDocumentKeyupHandler = ( this.documentKeyupHandler.bind( this ) );
         this.amountOfSlides = previewsList.childElementCount - 1;
-
-        // Array.prototype.forEach.call(
-        //     container.querySelectorAll( 'ol>li' ),
-        //     ( item: HTMLLIElement ) =>
-        //     {
-        //         this.slides.push( item );
-        //     }
-        // );
+        this.srcMap = srcMap;
 
         Array.prototype.forEach.call(
             previewsList.querySelectorAll( 'li' ),
@@ -186,7 +183,7 @@ export default class Lightbox
         wrapper = <HTMLLIElement>this.lightboxesList.children[index];
 
         image = <HTMLImageElement>document.createElement( 'IMG' );
-        image.setAttribute( 'src', previewSrc );
+        image.setAttribute( 'src', this.srcMap[previewSrc] );
         image.setAttribute( 'alt', '' );
 
         content = <HTMLSpanElement>document.createElement( 'SPAN' );

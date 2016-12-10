@@ -1,4 +1,7 @@
-import Lightbox from '../classes/Lightbox';
+declare var require: any;
+var srcMap = require('./srcMap');
+
+import Lightbox from './Lightbox';
 
 /**
  * Инициализация
@@ -11,5 +14,5 @@ export default function init(): void
 	lightboxesContainer = <HTMLElement>document.querySelector( '.lightboxes' );
 	images = <HTMLOListElement>document.querySelector( '.previews' );
 
-	new Lightbox( lightboxesContainer, images );
+	new Lightbox( lightboxesContainer, images, srcMap );
 }
