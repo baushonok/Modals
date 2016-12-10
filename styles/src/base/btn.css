@@ -1,0 +1,72 @@
+.btn {
+	$height: $module * 2.5;
+	$height-mobile: round($module * 1.75);
+	$padding: $module * 1.5;
+	$min-width: $module * 5;
+	$max-width: $module * 14;
+
+	$text-button: 15px;
+	$text-button-mobile: 14px;
+
+	$clr-text: $clr-bg;
+	$clr-button: $clr-main;
+
+	display: inline-block;
+	overflow: hidden;
+
+	cursor: pointer;
+
+	height: $height;
+	min-width: $min-width;
+	max-width: $max-width;
+	padding: 0 $padding;
+
+	font-size: $text-button;
+	font-weight: $weight-font-regular;
+	letter-spacing: .07em;
+	line-height: $height;
+	white-space: nowrap;
+	text-align: center;
+	text-decoration: none;
+	text-overflow: ellipsis;
+	text-transform: uppercase;
+
+	color: $clr-text;
+	background: $clr-button;
+	outline: none;
+
+	transition: background-color 1.6s cubic-bezier(0.2, 1, 0.3, 1);
+
+	&:hover
+	{
+		background-color: lighten($clr-button, 20%);
+
+		transition: background-color .5s cubic-bezier(0.2, 1, 0.3, 1);
+	}
+
+	.m-link {
+		display: inline;
+
+		box-sizing: content-box;
+		padding: 0;
+		margin: 0;
+
+		appearance: none;
+
+		background: transparent;
+
+		border: none;
+
+		&::-moz-focus-inner
+		{
+			padding: 0;
+
+			border: none;
+		}
+
+		/*&:focus
+		{
+			outline: $outline;
+		}*/
+	}
+}

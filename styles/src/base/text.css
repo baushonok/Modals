@@ -1,0 +1,16 @@
+a {
+	text-decoration: none;
+
+	&:hover
+	{
+		text-decoration: underline;
+	}
+}
+
+span.nowrap {
+	white-space: nowrap;
+}
+
+span.bold {
+	font-weight: $weight-font-bold;
+}

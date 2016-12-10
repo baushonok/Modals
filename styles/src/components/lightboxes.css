@@ -1,0 +1,261 @@
+.lightboxes
+{
+	$position-btn-close: 20px;
+	$size-btn-close: 50px;
+	$border-color-btn: white;
+
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+
+	display: none;
+
+	width: 100%;
+	height: 100%;
+
+	background: black;
+
+	button.close
+	{
+		position: absolute;
+		top: $position-btn-close;
+		right: $position-btn-close;
+		z-index: 2;
+
+		display: block;
+		overflow: hidden;
+
+		width: $size-btn-close;
+		height: $size-btn-close;
+		padding: 0;
+		margin: 0;
+
+		cursor: pointer;
+
+		text-indent: $size-btn-close;
+		white-space: nowrap;
+
+		background: transparent;
+		border: none;
+
+		box-sizing: content-box;
+		appearance: none;
+
+		&::before,
+		&::after {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+
+			width: $size-btn-close;
+			height: 2px;
+			margin: auto;
+
+			content: "";
+
+			pointer-events: none;
+
+			background-color: color($border-color-btn lightness(60%));
+		}
+
+		&::before
+		{
+			transform: rotate(45deg);
+		}
+
+		&::after
+		{
+			transform: rotate(-45deg);
+		}
+
+		&:hover
+		{
+			&::before,
+			&::after
+			{
+				background-color: $border-color-btn;
+			}
+		}
+	}
+
+	ol
+	{
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
+
+		overflow: hidden;
+
+		width: 100%;
+		height: 100%;
+		margin: auto;
+
+		white-space: nowrap;
+
+		> li
+		{
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: -1;
+
+			display: none;
+			overflow: hidden;
+
+			width: 100%;
+			height: 100%;
+
+			> img
+			{
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+
+				display: block;
+
+				max-width: 80%;
+				max-height: 80%;
+				margin: auto;
+
+				outline: thin solid transparent;
+			}
+		}
+	}
+
+	.controls
+	{
+		$margin-vertical: $position-btn-close + $size-btn-close;
+
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		z-index: 2;
+
+		display: block;
+
+		width: 100%;
+		margin-top: $margin-vertical;
+		margin-bottom: $margin-vertical;
+
+		.btn.prev,
+		.btn.next
+		{
+			$width: $size-btn-close * 2;
+
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			overflow: hidden;
+
+			width: $width;
+			height: 80%;
+			margin-top: auto;
+			margin-bottom: auto;
+
+			cursor: pointer;
+
+			text-indent: $width;
+			white-space: nowrap;
+
+			background: none;
+			border: none;
+
+			&::before
+			{
+				$size: $size-btn-close;
+
+				position: absolute;
+				top: 0;
+				bottom: 0;
+
+				width: $size;
+				height: $size;
+				margin: auto;
+
+				content: "";
+
+				background-color: transparent;
+				border-top: solid 1px color($border-color-btn lightness(60%));
+				border-left: solid 1px color($border-color-btn lightness(60%));
+			}
+
+			&:hover
+			{
+				&::before
+				{
+					border-top: solid 1px $border-color-btn;
+					border-left: solid 1px $border-color-btn;
+				}
+			}
+		}
+
+		.btn.prev
+		{
+			left: 10px;
+
+			&::before
+			{
+				right: auto;
+				left: 25px;
+
+				transform: rotate(-45deg);
+			}
+		}
+
+		.btn.next
+		{
+			right: 10px;
+
+			&::before
+			{
+				right: 25px;
+				left: auto;
+
+				transform: rotate(135deg);
+			}
+		}
+	}
+
+	&.active
+	{
+		display: block;
+
+		ol
+		{
+			> li
+			{
+				&.current
+				{
+					display: block;
+				}
+
+				> span
+				{
+					position: absolute;
+					right: 0;
+					bottom: 30px;
+					left: 0;
+
+					display: inline-block;
+
+					margin-right: auto;
+					margin-left: auto;
+
+					text-align: center;
+
+					color: white;
+				}
+			}
+		}
+	}
+}

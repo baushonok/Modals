@@ -1,0 +1,64 @@
+
+
+html {
+	overflow-x: hidden;
+
+	font-family: $font-regular;
+
+	color: $clr-fg;
+	background: $clr-bg;
+}
+
+body {
+	min-width: 320px;
+	max-width: 980px;
+	margin: 0 auto;
+	font-family: inherit;
+	line-height: 1.4;
+
+	@media (max-width: 980px) {
+		margin: 0 25px;
+	}
+
+	@media (max-width: 480px) {
+		margin: 0 10px;
+	}
+}
+
+header {
+	position: relative;
+	text-align: center;
+
+	> h1 {
+		padding-top: 16px;
+	}
+}
+
+footer {
+	position: relative;
+	z-index: 1;
+
+	display: block;
+
+	width: 100%;
+	height: 100px;
+	padding: 16px 0;
+	margin-top: 50px;
+	box-sizing: border-box;
+
+	background: $clr-plate;
+
+	&:before {
+		position: absolute;
+		top: 0;
+		left: -100vw;
+		z-index: -1;
+
+		width: 200vw;
+		height: 100%;
+
+		content: "";
+
+		background: inherit;
+	}
+}

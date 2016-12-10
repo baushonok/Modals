@@ -1,0 +1,99 @@
+html, body,
+div, span, p,
+img, object,
+h1, h2, h3, h4, h5, h6,
+a, em, strong, sub, sup, del, ins,
+dl, dt, dd, ol, ul, li,
+form, fieldset, legend, label,
+table, caption, tbody, tfoot, thead, tr, th, td, col, colgroup,
+blockquote, q,
+abbr, dfn, address, cite, kbd, samp,
+code, var,
+/* is not encouraged (begin) */
+b, i, big, small, tt,
+acronym, pre,
+/* is not encouraged (end) */
+/* deprecated (begin) */
+applet, basefont, font, center,
+frame, frameset, iframe, noframes, isindex,
+strike, u, s, dir,
+/* deprecated (end ) */
+/* HTML5 (begin) */
+header, hgroup, footer, article, section, aside, nav,
+figure, figcaption, time, menu, main
+/* HTML5 (end) */
+{
+	font-family: inherit;
+	font-size: inherit;
+	
+	margin: 0;
+	padding: 0;
+	
+	vertical-align: inherit;
+	line-height: inherit;
+	
+	border: 0;
+	outline-width: 0;
+	background: transparent;
+}
+
+html
+{
+	background-color: white;
+}
+
+body
+{
+	color: black;
+}
+
+:focus
+{
+	outline-width: 0;
+}
+
+table
+{
+	empty-cells: show;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+tbody, thead, tfoot
+{
+	margin: 0;
+	padding: 0;
+}
+
+th
+{
+	font-weight: bolder;
+	text-align: center;
+}
+
+td, th
+{
+	vertical-align: top;
+}
+
+caption
+{
+	text-align: center;
+}
+
+body
+{
+	font-family: sans-serif;
+	font-size: 16px;
+	font-weight: normal;
+	font-style: normal;
+	font-variant: normal;
+	
+	text-align: left;
+	text-decoration: none;
+	text-indent: 0;
+	text-transform: none;
+	
+	vertical-align: baseline;
+	line-height: 1;
+}
