@@ -13,6 +13,14 @@ const CLASS_SLIDE_CURRENT: string = 'current';
  * @type {number}
  */
 const KEY_ESC: number = 27;
+/**/
+const KEY_RIGHT_ARROW: number = 39;
+/**/
+const KEY_LEFT_ARROW: number = 37;
+/**/
+const KEY_ENTER: number = 13;
+
+
 
 export default class Lightbox
 {
@@ -20,6 +28,8 @@ export default class Lightbox
      * Переменная в которой сохраняется функция для обработки нажатия клавиши
      */
     private boundDocumentKeyupHandler: ( event: KeyboardEvent ) => void;
+    /**/
+    private isShown: boolean;
     /**
      * Элемент лайтбокса
      */
@@ -41,6 +51,10 @@ export default class Lightbox
      */
     private currentSlide: HTMLLIElement;
     /**/
+    private currentFocused: HTMLLIElement;
+    /**/
+    private currentFocusedIndex: number;
+    /**/
     private amountOfSlides: number;
     /**/
     private srcMap: any;
@@ -60,6 +74,7 @@ export default class Lightbox
         let buttonClose: HTMLElement;
         let controls: HTMLElement;
 
+        this.isShown = false;
         this.container = container;
         this.previewsList = previewsList;
         this.lightboxesList = <HTMLOListElement>container.querySelector( 'ol' );
@@ -67,6 +82,8 @@ export default class Lightbox
         this.currentIndex = -1;
         this.currentPreview = null;
         this.currentSlide = null;
+        this.currentFocused = null;
+        this.currentFocusedIndex = 0;
         this.boundDocumentKeyupHandler = ( this.documentKeyupHandler.bind( this ) );
         this.amountOfSlides = previewsList.childElementCount - 1;
         this.srcMap = srcMap;
@@ -113,6 +130,8 @@ export default class Lightbox
                 buttonNext.addEventListener( 'click', this.buttonNextClickHandler.bind( this ), false );
             }
         }
+
+        document.addEventListener( 'keyup', this.boundDocumentKeyupHandler );
     }
 
     /**/
@@ -237,6 +256,60 @@ export default class Lightbox
         this.createPrevSlide( index, previewElement );
     }
 
+    /**/
+    private setFocusedPreviewByIndex( index: number ): void
+    {
+        if ( this.currentFocused )
+        {
+            this.currentFocused.classList.remove( 'focused' );
+        }
+
+        this.currentFocusedIndex = index;
+        this.currentFocused = <HTMLLIElement>this.previewsList.children[this.currentFocusedIndex];
+        this.currentFocused.classList.add( 'focused' );
+    }
+
+    /**/
+    private switchFocusPrev(): void
+    {
+        if ( this.isShown )
+        {
+            this.buttonPrevClickHandler();
+            return;
+        }
+
+        if ( !this.currentFocused )
+        {
+            this.setFocusedPreviewByIndex( 0 );
+            return;
+        }
+
+        this.setFocusedPreviewByIndex(
+            this.getPrevIndex( this.currentFocusedIndex )
+        );
+    }
+
+    /**/
+    private switchFocusNext(): void
+    {
+        if ( this.isShown ) {
+            this.buttonNextClickHandler();
+            return;
+        }
+
+        if ( !this.currentFocused )
+        {
+            this.setFocusedPreviewByIndex( 0 );
+            return;
+        }
+
+        this.setFocusedPreviewByIndex(
+            this.getNextIndex( this.currentFocusedIndex )
+        );
+    }
+
+
+
 	/**
      * Обработка нажатия на превью
      * @param {number} index - номер элемента
@@ -262,7 +335,7 @@ export default class Lightbox
      * Обработчик нажатия на кнопку переключения на предыдущий слайд
      * @param {Event} event
      */
-    private buttonPrevClickHandler( event: Event ): void
+    private buttonPrevClickHandler( event?: Event ): void
     {
         let prev: HTMLLIElement;
 
@@ -281,7 +354,7 @@ export default class Lightbox
      * Обработчик нажатия на кнопку переключения на следующий слайд
      * @param {Event} event
      */
-    private buttonNextClickHandler( event: Event ): void
+    private buttonNextClickHandler( event?: Event ): void
     {
         let next: HTMLLIElement;
 
@@ -296,6 +369,17 @@ export default class Lightbox
         this.createNextSlide( this.currentIndex, this.currentSlide );
     }
 
+    /**/
+    private keyEnterClickHandler( event: KeyboardEvent ): void
+    {
+        if ( !this.isShown )
+        {
+            this.currentFocused.click();
+        }
+    }
+
+
+
     /**
      * Функция открытия лайтбокса
      */
@@ -308,9 +392,9 @@ export default class Lightbox
             this.currentSlide.classList.add( CLASS_SLIDE_CURRENT );
         }
 
-        document.documentElement.style.overflow = 'hidden';
+        this.isShown = true;
 
-        document.addEventListener( 'keyup', this.boundDocumentKeyupHandler );
+        document.documentElement.style.overflow = 'hidden';
     }
 
     /**
@@ -328,7 +412,9 @@ export default class Lightbox
             this.currentSlide = null;
         }
 
-        document.removeEventListener( 'keyup', this.boundDocumentKeyupHandler );
+        this.isShown = false;
+        this.setFocusedPreviewByIndex( this.currentIndex );
+        //document.removeEventListener( 'keyup', this.boundDocumentKeyupHandler );
     }
 
     /**
@@ -346,9 +432,21 @@ export default class Lightbox
      */
     private documentKeyupHandler( event: KeyboardEvent ): void
     {
-        if ( event.keyCode === KEY_ESC )
-        {
-            this.hide();
+        switch (event.keyCode) {
+            case KEY_ESC:
+                this.hide();
+                break;
+            case KEY_LEFT_ARROW:
+                this.switchFocusPrev();
+                break;
+            case KEY_RIGHT_ARROW:
+                this.switchFocusNext();
+                break;
+            case KEY_ENTER:
+                this.keyEnterClickHandler( event );
+                break;
+            default:
+                break;
         }
     }
 }

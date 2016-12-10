@@ -23,6 +23,11 @@
 
 		text-align: center;
 
+		&.focused
+		{
+			outline: 3px solid $clr-additional;
+		}
+
 		&:last-of-type
 		{
 			margin-right: 0;
