@@ -266,16 +266,15 @@ export default class Lightbox
     {
         let prev: HTMLLIElement;
 
-        prev = this.getPrevSlide( this.currentSlide );
-
-        if ( !prev)
-        {
-            prev = this.createLightbox( this.getPrevIndex( this.currentIndex ), this.currentPreview );
-        }
+        prev = this.createPrevSlide( this.currentIndex, this.currentSlide );
 
         this.currentSlide.classList.remove( CLASS_SLIDE_CURRENT );
         this.currentSlide = prev;
         this.currentSlide.classList.add( CLASS_SLIDE_CURRENT );
+        this.currentIndex = this.getPrevIndex( this.currentIndex );
+
+        // preload
+        this.createPrevSlide( this.currentIndex, this.currentSlide );
     }
 
 	/**
@@ -286,17 +285,15 @@ export default class Lightbox
     {
         let next: HTMLLIElement;
 
-        next = this.getNextSlide( this.currentSlide );
-
-        if ( !next)
-        {
-            next = this.createLightbox( this.getNextIndex( this.currentIndex ), this.currentPreview );
-        }
+        next = this.createNextSlide( this.currentIndex, this.currentSlide );
 
         this.currentSlide.classList.remove( CLASS_SLIDE_CURRENT );
         this.currentSlide = next;
         this.currentSlide.classList.add( CLASS_SLIDE_CURRENT );
+        this.currentIndex = this.getNextIndex( this.currentIndex );
 
+        // preload
+        this.createNextSlide( this.currentIndex, this.currentSlide );
     }
 
     /**
