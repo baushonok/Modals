@@ -1,18 +1,12 @@
-/* Classes for states */
-const CLASS_LIGHTBOX_ACTIVE: string = 'active';
-const CLASS_SLIDE_CURRENT: string = 'current';
+declare var require: any;
+var constants = require('./lightbox.constants');
 
-/* Key codes */
-const KEY_ESC: number = 27;
-const KEY_RIGHT_ARROW: number = 39;
-const KEY_LEFT_ARROW: number = 37;
-const KEY_ENTER: number = 13;
-
+import {elementPreviewClickHandler, buttonPrevClickHandler, buttonNextClickHandler, keyEnterClickHandler, documentKeyupHandler} from './functions/handlers';
+import {getPrevIndex, getNextIndex} from './functions/getters';
 
 
 export default class Lightbox
 {
-    private boundDocumentKeyupHandler: ( event: KeyboardEvent ) => void;
     private isShown: boolean;
 
     /**
@@ -61,7 +55,6 @@ export default class Lightbox
         this.currentSlide = null;
         this.currentFocused = null;
         this.currentFocusedIndex = 0;
-        this.boundDocumentKeyupHandler = ( this.documentKeyupHandler.bind( this ) );
         this.amountOfSlides = previewsList.childElementCount - 1;
         this.srcMap = srcMap;
 
@@ -71,7 +64,7 @@ export default class Lightbox
             {
                 item.addEventListener(
                     'click',
-                    this.elementPreviewClickHandler.bind(
+                    elementPreviewClickHandler.bind(
                         this,
                         index
                     ),
@@ -97,76 +90,18 @@ export default class Lightbox
 
             if ( buttonPrev )
             {
-                buttonPrev.addEventListener( 'click', this.buttonPrevClickHandler.bind( this ), false );
+                buttonPrev.addEventListener( 'click', buttonPrevClickHandler.bind( this ), false );
             }
 
             buttonNext = <HTMLButtonElement>controls.querySelector( 'button.next' );
 
             if ( buttonNext )
             {
-                buttonNext.addEventListener( 'click', this.buttonNextClickHandler.bind( this ), false );
+                buttonNext.addEventListener( 'click', buttonNextClickHandler.bind( this ), false );
             }
         }
 
-        document.addEventListener( 'keyup', this.boundDocumentKeyupHandler );
-    }
-
-    /**
-     * Get next index for list of previews
-     * and for list of lightboxes as well
-     * @param {number} current - current index
-     */
-    private getNextIndex( current: number ): number
-    {
-        return current === this.amountOfSlides ? 0 : ( current + 1 );
-    }
-
-    /**
-     * Get previous index for list of previews
-     * and for list of lightboxes as well
-     * @param {number} current - current index
-     */
-    private getPrevIndex( current: number ): number
-    {
-        return current ? ( current - 1 ) : this.amountOfSlides;
-    }
-
-    /**
-     * Get previous lightbox
-     * @param {HTMLLIElement} current - current lightbox
-     * @returns {HTMLLIElement} - previous lightbox
-     */
-    private getPrevSlide( current: HTMLLIElement ): HTMLLIElement
-    {
-        let prev: HTMLLIElement;
-
-        prev = <HTMLLIElement>current.previousElementSibling;
-
-        if( !prev )
-        {
-            prev = <HTMLLIElement>current.parentElement.lastElementChild;
-        }
-
-        return prev;
-    }
-
-    /**
-     * Get next lightbox
-     * @param {HTMLLIElement} current - current lightbox
-     * @returns {HTMLLIElement} - next lightbox
-     */
-    private getNextSlide( current: HTMLLIElement ): HTMLLIElement
-    {
-        let next: HTMLLIElement;
-
-        next = <HTMLLIElement>current.nextElementSibling;
-
-        if ( !next )
-        {
-            next = <HTMLLIElement>current.parentElement.firstElementChild;
-        }
-
-        return next;
+        document.addEventListener( 'keyup', documentKeyupHandler.bind( this ) );
     }
 
     /**
@@ -219,7 +154,7 @@ export default class Lightbox
     {
         let nextIndex: number;
 
-        nextIndex = this.getNextIndex( index );
+        nextIndex = getNextIndex( index, this.amountOfSlides );
 
         if ( !this.slides[nextIndex] )
         {
@@ -238,7 +173,7 @@ export default class Lightbox
     {
         let prevIndex: number;
 
-        prevIndex = this.getPrevIndex( index );
+        prevIndex = getPrevIndex( index, this.amountOfSlides );
 
         if ( !this.slides[prevIndex] )
         {
@@ -275,7 +210,7 @@ export default class Lightbox
     {
         if ( this.isShown )
         {
-            this.buttonPrevClickHandler();
+            ( buttonPrevClickHandler.bind( this ) )();
             return;
         }
 
@@ -286,14 +221,14 @@ export default class Lightbox
         }
 
         this.setFocusedPreviewByIndex(
-            this.getPrevIndex( this.currentFocusedIndex )
+            getPrevIndex( this.currentFocusedIndex, this.amountOfSlides )
         );
     }
 
     private switchFocusNext(): void
     {
         if ( this.isShown ) {
-            this.buttonNextClickHandler();
+            ( buttonNextClickHandler.bind( this ) )();
             return;
         }
 
@@ -304,68 +239,8 @@ export default class Lightbox
         }
 
         this.setFocusedPreviewByIndex(
-            this.getNextIndex( this.currentFocusedIndex )
+            getNextIndex( this.currentFocusedIndex, this.amountOfSlides )
         );
-    }
-
-
-
-	/**
-     *
-     * @param {number} index - number of current preview element
-     * @param {Event} event
-     */
-    private elementPreviewClickHandler( index: number, event: Event ): void
-    {
-        let previewElement: HTMLLIElement;
-
-        previewElement = <HTMLLIElement>event.currentTarget;
-
-        if ( !this.slides[index] ) {
-            this.slides[index] = this.createLightbox( index, previewElement, this.createNextAndPrevSlides.bind(this) );
-        }
-
-        this.currentSlide = this.slides[index];
-        this.currentIndex = index;
-        this.show();
-    }
-
-    private buttonPrevClickHandler( event?: Event ): void
-    {
-        let prev: HTMLLIElement;
-
-        prev = this.createPrevSlide( this.currentIndex );
-
-        this.currentSlide.classList.remove( CLASS_SLIDE_CURRENT );
-        this.currentSlide = prev;
-        this.currentSlide.classList.add( CLASS_SLIDE_CURRENT );
-        this.currentIndex = this.getPrevIndex( this.currentIndex );
-
-        // preload
-        this.createPrevSlide( this.currentIndex );
-    }
-
-    private buttonNextClickHandler( event?: Event ): void
-    {
-        let next: HTMLLIElement;
-
-        next = this.createNextSlide( this.currentIndex );
-
-        this.currentSlide.classList.remove( CLASS_SLIDE_CURRENT );
-        this.currentSlide = next;
-        this.currentSlide.classList.add( CLASS_SLIDE_CURRENT );
-        this.currentIndex = this.getNextIndex( this.currentIndex );
-
-        // preload
-        this.createNextSlide( this.currentIndex );
-    }
-
-    private keyEnterClickHandler( event: KeyboardEvent ): void
-    {
-        if ( !this.isShown )
-        {
-            this.currentFocused.click();
-        }
     }
 
 
@@ -375,11 +250,11 @@ export default class Lightbox
      */
     public show(): void
     {
-        this.container.classList.add( CLASS_LIGHTBOX_ACTIVE );
+        this.container.classList.add( constants.CLASS_LIGHTBOX_ACTIVE );
 
         if ( this.currentSlide )
         {
-            this.currentSlide.classList.add( CLASS_SLIDE_CURRENT );
+            this.currentSlide.classList.add( constants.CLASS_SLIDE_CURRENT );
         }
 
         this.isShown = true;
@@ -392,43 +267,22 @@ export default class Lightbox
      */
     public hide(): void
     {
-        this.container.classList.remove( CLASS_LIGHTBOX_ACTIVE );
+        this.container.classList.remove( constants.CLASS_LIGHTBOX_ACTIVE );
 
         document.documentElement.style.overflow = '';
 
         if ( this.currentSlide )
         {
-            this.currentSlide.classList.remove( CLASS_SLIDE_CURRENT );
+            this.currentSlide.classList.remove( constants.CLASS_SLIDE_CURRENT );
             this.currentSlide = null;
         }
 
         this.isShown = false;
         this.setFocusedPreviewByIndex( this.currentIndex );
-        //document.removeEventListener( 'keyup', this.boundDocumentKeyupHandler );
     }
 
     private buttonCloseClickHandler( event: Event ): void
     {
         this.hide()
-    }
-
-    private documentKeyupHandler( event: KeyboardEvent ): void
-    {
-        switch (event.keyCode) {
-            case KEY_ESC:
-                this.hide();
-                break;
-            case KEY_LEFT_ARROW:
-                this.switchFocusPrev();
-                break;
-            case KEY_RIGHT_ARROW:
-                this.switchFocusNext();
-                break;
-            case KEY_ENTER:
-                this.keyEnterClickHandler( event );
-                break;
-            default:
-                break;
-        }
     }
 }
