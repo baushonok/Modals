@@ -1,69 +1,47 @@
-/**
- * Класс активного лайтбокса
- * @type {string}
- */
+/* Classes for states */
 const CLASS_LIGHTBOX_ACTIVE: string = 'active';
-/**
- * Класс текущего слайда
- * @type {string}
- */
 const CLASS_SLIDE_CURRENT: string = 'current';
-/**
- * Код клавиши esc
- * @type {number}
- */
+
+/* Key codes */
 const KEY_ESC: number = 27;
-/**/
 const KEY_RIGHT_ARROW: number = 39;
-/**/
 const KEY_LEFT_ARROW: number = 37;
-/**/
 const KEY_ENTER: number = 13;
 
 
 
 export default class Lightbox
 {
-    /**
-     * Переменная в которой сохраняется функция для обработки нажатия клавиши
-     */
     private boundDocumentKeyupHandler: ( event: KeyboardEvent ) => void;
-    /**/
     private isShown: boolean;
+
     /**
-     * Элемент лайтбокса
-     */
+    * Main element
+    * @type {HTMLElement}
+    */
     private container: HTMLElement;
-    /**/
-    private previewsList: HTMLOListElement;
-    /**/
-    private lightboxesList: HTMLOListElement;
-	/**
-     * Массив слайдов
+    /**
+     * Array of lightboxes
+     * @type {HTMLLIElement[]}
      */
     private slides: HTMLLIElement[];
-    /**/
+
+    private previewsList: HTMLOListElement;
+    private lightboxesList: HTMLOListElement;
+
     private currentIndex: number;
-    /**/
-    private currentPreview: HTMLLIElement;
-	/**
-     * Текущий слайд
-     */
     private currentSlide: HTMLLIElement;
-    /**/
+
     private currentFocused: HTMLLIElement;
-    /**/
     private currentFocusedIndex: number;
-    /**/
     private amountOfSlides: number;
-    /**/
     private srcMap: any;
 
     /**
-     * Конструктор
-     * @param {HTMLElement} container
-     * @param {HTMLOListElement} previewsList
-     * @param {any} srcMap
+     * Constructor
+     * @param {HTMLElement} container - wrapper for list of lightboxes
+     * @param {HTMLOListElement} previewsList - list of previews
+     * @param {any} srcMap - config for comparison of srcs
      */
     public constructor(
         container: HTMLElement,
@@ -80,7 +58,6 @@ export default class Lightbox
         this.lightboxesList = <HTMLOListElement>container.querySelector( 'ol' );
         this.slides = [];
         this.currentIndex = -1;
-        this.currentPreview = null;
         this.currentSlide = null;
         this.currentFocused = null;
         this.currentFocusedIndex = 0;
@@ -109,7 +86,7 @@ export default class Lightbox
             buttonClose.addEventListener( 'click', this.buttonCloseClickHandler.bind( this ), false );
         }
 
-        controls = <HTMLElement>container.querySelector( 'div.controls' );
+        controls = <HTMLElement>container.querySelector( '.controls' );
 
         if ( controls )
         {
@@ -134,57 +111,71 @@ export default class Lightbox
         document.addEventListener( 'keyup', this.boundDocumentKeyupHandler );
     }
 
-    /**/
+    /**
+     * Get next index for list of previews
+     * and for list of lightboxes as well
+     * @param {number} current - current index
+     */
     private getNextIndex( current: number ): number
     {
         return current === this.amountOfSlides ? 0 : ( current + 1 );
     }
 
-    /**/
+    /**
+     * Get previous index for list of previews
+     * and for list of lightboxes as well
+     * @param {number} current - current index
+     */
     private getPrevIndex( current: number ): number
     {
         return current ? ( current - 1 ) : this.amountOfSlides;
     }
 
     /**
-     * Получение предыдущего слайда
-     * @param {HTMLLIElement} slide - слайд, относительно которого искать
-     * @returns {HTMLLIElement}
+     * Get previous lightbox
+     * @param {HTMLLIElement} current - current lightbox
+     * @returns {HTMLLIElement} - previous lightbox
      */
-    private getPrevSlide( slide: HTMLLIElement ): HTMLLIElement
+    private getPrevSlide( current: HTMLLIElement ): HTMLLIElement
     {
         let prev: HTMLLIElement;
 
-        prev = <HTMLLIElement>slide.previousElementSibling;
+        prev = <HTMLLIElement>current.previousElementSibling;
 
         if( !prev )
         {
-            prev = <HTMLLIElement>slide.parentElement.lastElementChild;
+            prev = <HTMLLIElement>current.parentElement.lastElementChild;
         }
 
         return prev;
     }
 
     /**
-     * Получение следующего слайда
-     * @param {HTMLLIElement} slide - слайд, относительно которого искать
-     * @returns {HTMLLIElement}
+     * Get next lightbox
+     * @param {HTMLLIElement} current - current lightbox
+     * @returns {HTMLLIElement} - next lightbox
      */
-    private getNextSlide( slide: HTMLLIElement ): HTMLLIElement
+    private getNextSlide( current: HTMLLIElement ): HTMLLIElement
     {
         let next: HTMLLIElement;
 
-        next = <HTMLLIElement>slide.nextElementSibling;
+        next = <HTMLLIElement>current.nextElementSibling;
 
         if ( !next )
         {
-            next = <HTMLLIElement>slide.parentElement.firstElementChild;
+            next = <HTMLLIElement>current.parentElement.firstElementChild;
         }
 
         return next;
     }
 
-    /**/
+    /**
+     * Create lightbox for current preview
+     * @param {number} index - number of creating lightbox
+     * @param {HTMLLIElement} previewElement - current preview element
+     * @param {Function} callback
+     * @returns {HTMLLIElement} - created lightbox
+     */
     private createLightbox( index: number, previewElement: HTMLLIElement, callback?: Function ): HTMLLIElement
     {
         let previewImage: HTMLImageElement;
@@ -219,8 +210,12 @@ export default class Lightbox
         return wrapper;
     }
 
-    /**/
-    private createNextSlide( index: number, previewElement: HTMLLIElement ): HTMLLIElement
+    /**
+     * Create next lightbox if it doesn't exist
+     * @param {number} index - number of current lightbox
+     * @returns {HTMLLIElement} - created lightbox
+     */
+    private createNextSlide( index: number ): HTMLLIElement
     {
         let nextIndex: number;
 
@@ -234,8 +229,12 @@ export default class Lightbox
         return this.slides[nextIndex];
     }
 
-    /**/
-    private createPrevSlide( index: number, previewElement: HTMLLIElement ): HTMLLIElement
+    /**
+     * Create previous lightbox if it doesn't exist
+     * @param {number} index - number of current lightbox
+     * @returns {HTMLLIElement} - created lightbox
+     */
+    private createPrevSlide( index: number ): HTMLLIElement
     {
         let prevIndex: number;
 
@@ -249,14 +248,17 @@ export default class Lightbox
         return this.slides[prevIndex];
     }
 
-    /**/
-    private createNextAndPrevSlides( index: number, previewElement: HTMLLIElement ): void
+    /**
+     * Create previous and next lightbox if they don't exist
+     * @param {number} index - number of current lightbox
+     */
+    private createNextAndPrevSlides( index: number ): void
     {
-        this.createNextSlide( index, previewElement );
-        this.createPrevSlide( index, previewElement );
+        this.createNextSlide( index );
+        this.createPrevSlide( index );
     }
 
-    /**/
+
     private setFocusedPreviewByIndex( index: number ): void
     {
         if ( this.currentFocused )
@@ -269,7 +271,6 @@ export default class Lightbox
         this.currentFocused.classList.add( 'focused' );
     }
 
-    /**/
     private switchFocusPrev(): void
     {
         if ( this.isShown )
@@ -289,7 +290,6 @@ export default class Lightbox
         );
     }
 
-    /**/
     private switchFocusNext(): void
     {
         if ( this.isShown ) {
@@ -311,8 +311,8 @@ export default class Lightbox
 
 
 	/**
-     * Обработка нажатия на превью
-     * @param {number} index - номер элемента
+     *
+     * @param {number} index - number of current preview element
      * @param {Event} event
      */
     private elementPreviewClickHandler( index: number, event: Event ): void
@@ -325,21 +325,16 @@ export default class Lightbox
             this.slides[index] = this.createLightbox( index, previewElement, this.createNextAndPrevSlides.bind(this) );
         }
 
-        this.currentPreview = previewElement;
         this.currentSlide = this.slides[index];
         this.currentIndex = index;
         this.show();
     }
 
-	/**
-     * Обработчик нажатия на кнопку переключения на предыдущий слайд
-     * @param {Event} event
-     */
     private buttonPrevClickHandler( event?: Event ): void
     {
         let prev: HTMLLIElement;
 
-        prev = this.createPrevSlide( this.currentIndex, this.currentSlide );
+        prev = this.createPrevSlide( this.currentIndex );
 
         this.currentSlide.classList.remove( CLASS_SLIDE_CURRENT );
         this.currentSlide = prev;
@@ -347,18 +342,14 @@ export default class Lightbox
         this.currentIndex = this.getPrevIndex( this.currentIndex );
 
         // preload
-        this.createPrevSlide( this.currentIndex, this.currentSlide );
+        this.createPrevSlide( this.currentIndex );
     }
 
-	/**
-     * Обработчик нажатия на кнопку переключения на следующий слайд
-     * @param {Event} event
-     */
     private buttonNextClickHandler( event?: Event ): void
     {
         let next: HTMLLIElement;
 
-        next = this.createNextSlide( this.currentIndex, this.currentSlide );
+        next = this.createNextSlide( this.currentIndex );
 
         this.currentSlide.classList.remove( CLASS_SLIDE_CURRENT );
         this.currentSlide = next;
@@ -366,10 +357,9 @@ export default class Lightbox
         this.currentIndex = this.getNextIndex( this.currentIndex );
 
         // preload
-        this.createNextSlide( this.currentIndex, this.currentSlide );
+        this.createNextSlide( this.currentIndex );
     }
 
-    /**/
     private keyEnterClickHandler( event: KeyboardEvent ): void
     {
         if ( !this.isShown )
@@ -381,7 +371,7 @@ export default class Lightbox
 
 
     /**
-     * Функция открытия лайтбокса
+     * Open lightbox
      */
     public show(): void
     {
@@ -398,7 +388,7 @@ export default class Lightbox
     }
 
     /**
-     * Функция закрытия лайтбокса
+     * Close lightbox
      */
     public hide(): void
     {
@@ -417,19 +407,11 @@ export default class Lightbox
         //document.removeEventListener( 'keyup', this.boundDocumentKeyupHandler );
     }
 
-    /**
-     * Обработчик нажатия на кнопку закрытия лайтбокса
-     * @param {HTMLElement} event
-     */
     private buttonCloseClickHandler( event: Event ): void
     {
         this.hide()
     }
 
-    /**
-     * Обработчик нажатия на клавишу
-     * @param {KeyboardEvent} event
-     */
     private documentKeyupHandler( event: KeyboardEvent ): void
     {
         switch (event.keyCode) {

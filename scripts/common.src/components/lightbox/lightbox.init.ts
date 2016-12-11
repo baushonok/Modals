@@ -3,9 +3,8 @@ var srcMap = require('./srcMap');
 
 import Lightbox from './Lightbox';
 
-/**
- * Инициализация
- */
+
+
 export default function init(): void
 {
 	let lightboxesContainer: HTMLElement;
