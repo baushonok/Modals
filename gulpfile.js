@@ -3,6 +3,7 @@ const gulp = require( 'gulp' );
 const postcss = require('gulp-postcss');
 const cssnano = require('gulp-cssnano');
 const autoprefixer = require( 'gulp-autoprefixer' );
+const stylelint = require('gulp-stylelint');
 
 const watch = require('gulp-watch');
 
@@ -14,6 +15,17 @@ const sourcemaps = require( 'gulp-sourcemaps' );
 const uglify = require( 'gulp-uglify' );
 const gulpUtil = require( 'gulp-util' );
 
+
+
+gulp.task('stylelint', function lintCssTask() {
+  return gulp
+    .src('./styles/src/**/*.css')
+    .pipe(stylelint({
+      reporters: [
+        {formatter: 'string', console: true}
+      ]
+    }));
+});
 
 gulp.task('default', function () {
   return gulp.src('./styles/src/*.css')
@@ -32,23 +44,6 @@ gulp.task('default', function () {
         gulp.dest('./styles/')
     );
 });
-
-//gulp.task(
-//	'default',
-//	function ()
-//	{
-//		gulp.src( './styles/common.src/**/*.less' )
-//			.pipe( cssNdb() )
-//			.pipe( concat( 'common.less' ) )
-//			.pipe( less() )
-//			.pipe(autoprefixer({
-//				browsers: ['last 2 versions'],
-//				cascade: false
-//			}))
-//			.pipe( cssnano() )
-//			.pipe( gulp.dest( './styles/' ) );
-//	}
-//);
 
 gulp.task(
 	'watch',
