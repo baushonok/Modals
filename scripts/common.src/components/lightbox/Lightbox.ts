@@ -6,6 +6,7 @@ import {getPrevIndex, getNextIndex} from './functions/getters';
 import {setFocusedPreviewByIndex, switchFocusPrev, switchFocusNext} from './functions/focus';
 
 
+
 export default class Lightbox
 {
     private isShown: boolean;

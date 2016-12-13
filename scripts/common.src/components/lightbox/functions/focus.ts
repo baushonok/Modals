@@ -19,7 +19,7 @@ export function switchFocusPrev(): void
 {
 	if ( this.isShown )
 	{
-		( buttonPrevClickHandler.bind( this ) )();
+		buttonPrevClickHandler.bind( this )();
 		return;
 	}
 
@@ -37,7 +37,7 @@ export function switchFocusPrev(): void
 export function switchFocusNext(): void
 {
 	if ( this.isShown ) {
-		( buttonNextClickHandler.bind( this ) )();
+		buttonNextClickHandler.bind( this )();
 		return;
 	}
 
