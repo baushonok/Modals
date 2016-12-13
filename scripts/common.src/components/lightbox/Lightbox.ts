@@ -1,6 +1,3 @@
-declare var require: any;
-var constants = require('./lightbox.constants');
-
 import {elementPreviewClickHandler, buttonPrevClickHandler, buttonNextClickHandler, keyEnterClickHandler, documentKeyupHandler, buttonCloseClickHandler} from './functions/handlers';
 import {getPrevIndex, getNextIndex} from './functions/getters';
 import {setFocusedPreviewByIndex, switchFocusPrev, switchFocusNext} from './functions/focus';

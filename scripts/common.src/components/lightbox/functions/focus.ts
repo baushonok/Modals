@@ -1,3 +1,6 @@
+declare var require: any;
+var constants = require('../lightbox.constants');
+
 import {buttonPrevClickHandler, buttonNextClickHandler} from './handlers';
 import {getPrevIndex, getNextIndex} from './getters';
 
@@ -7,12 +10,12 @@ export function setFocusedPreviewByIndex( index: number ): void
 {
 	if ( this.currentFocused )
 	{
-		this.currentFocused.classList.remove( 'focused' );
+		this.currentFocused.classList.remove( constants.CLASS_PREVIEW_FOCUSED );
 	}
 
 	this.currentFocusedIndex = index;
 	this.currentFocused = <HTMLLIElement>this.previewsList.children[this.currentFocusedIndex];
-	this.currentFocused.classList.add( 'focused' );
+	this.currentFocused.classList.add( constants.CLASS_PREVIEW_FOCUSED );
 }
 
 export function switchFocusPrev(): void
