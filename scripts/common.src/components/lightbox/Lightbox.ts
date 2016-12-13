@@ -4,6 +4,7 @@ var constants = require('./lightbox.constants');
 import {elementPreviewClickHandler, buttonPrevClickHandler, buttonNextClickHandler, keyEnterClickHandler, documentKeyupHandler} from './functions/handlers';
 import {getPrevIndex, getNextIndex} from './functions/getters';
 import {setFocusedPreviewByIndex, switchFocusPrev, switchFocusNext} from './functions/focus';
+import {createLightbox, createPrevSlide, createNextSlide} from './functions/creates';
 
 
 
@@ -106,6 +107,8 @@ export default class Lightbox
         document.addEventListener( 'keyup', documentKeyupHandler.bind( this ) );
     }
 
+
+
     /**
      * Create lightbox for current preview
      * @param {number} index - number of creating lightbox
@@ -113,38 +116,12 @@ export default class Lightbox
      * @param {Function} callback
      * @returns {HTMLLIElement} - created lightbox
      */
-    private createLightbox( index: number, previewElement: HTMLLIElement, callback?: Function ): HTMLLIElement
+    private createLightbox(
+        index: number,
+        previewElement: HTMLLIElement,
+        callback?: Function ): HTMLLIElement
     {
-        let previewImage: HTMLImageElement;
-        let previewContent: HTMLSpanElement;
-
-        let previewSrc: string;
-        var wrapper: HTMLLIElement;
-        let image: HTMLImageElement;
-        let content: HTMLSpanElement;
-
-        previewImage = <HTMLImageElement>previewElement.querySelector( 'img' );
-        previewContent = <HTMLSpanElement>previewElement.querySelector( 'span' );
-
-        previewSrc = previewImage.getAttribute( 'src' );
-        wrapper = <HTMLLIElement>this.lightboxesList.children[index];
-
-        image = <HTMLImageElement>document.createElement( 'IMG' );
-        image.setAttribute( 'src', this.srcMap[previewSrc] );
-        image.setAttribute( 'alt', '' );
-
-        content = <HTMLSpanElement>document.createElement( 'SPAN' );
-        content.textContent = previewContent.textContent;
-
-        wrapper.appendChild( image );
-        wrapper.appendChild( content );
-
-        if ( callback && typeof callback === 'function' )
-        {
-            callback( index, previewElement );
-        }
-
-        return wrapper;
+        return createLightbox.bind( this )( index, previewElement, callback );
     }
 
     /**
@@ -154,16 +131,7 @@ export default class Lightbox
      */
     private createNextSlide( index: number ): HTMLLIElement
     {
-        let nextIndex: number;
-
-        nextIndex = getNextIndex( index, this.amountOfSlides );
-
-        if ( !this.slides[nextIndex] )
-        {
-            this.slides[nextIndex] = this.createLightbox( nextIndex, <HTMLLIElement>this.previewsList.children[nextIndex] );
-        }
-
-        return this.slides[nextIndex];
+        return createNextSlide.bind( this )( index );
     }
 
     /**
@@ -173,16 +141,7 @@ export default class Lightbox
      */
     private createPrevSlide( index: number ): HTMLLIElement
     {
-        let prevIndex: number;
-
-        prevIndex = getPrevIndex( index, this.amountOfSlides );
-
-        if ( !this.slides[prevIndex] )
-        {
-            this.slides[prevIndex] = this.createLightbox( prevIndex, <HTMLLIElement>this.previewsList.children[prevIndex] );
-        }
-
-        return this.slides[prevIndex];
+        return createPrevSlide.bind( this )( index );
     }
 
     /**
@@ -194,6 +153,7 @@ export default class Lightbox
         this.createNextSlide( index );
         this.createPrevSlide( index );
     }
+
 
 
     private setFocusedPreviewByIndex( index: number ): void
