@@ -1,7 +1,7 @@
 declare var require: any;
 var constants = require('./lightbox.constants');
 
-import {elementPreviewClickHandler, buttonPrevClickHandler, buttonNextClickHandler, keyEnterClickHandler, documentKeyupHandler} from './functions/handlers';
+import {elementPreviewClickHandler, buttonPrevClickHandler, buttonNextClickHandler, keyEnterClickHandler, documentKeyupHandler, buttonCloseClickHandler} from './functions/handlers';
 import {getPrevIndex, getNextIndex} from './functions/getters';
 import {setFocusedPreviewByIndex, switchFocusPrev, switchFocusNext} from './functions/focus';
 import {createLightbox, createPrevSlide, createNextSlide} from './functions/creates';
@@ -80,7 +80,7 @@ export default class Lightbox
 
         if ( buttonClose )
         {
-            buttonClose.addEventListener( 'click', this.buttonCloseClickHandler.bind( this ), false );
+            buttonClose.addEventListener( 'click', buttonCloseClickHandler.bind( this ), false );
         }
 
         controls = <HTMLElement>container.querySelector( '.controls' );
@@ -188,10 +188,5 @@ export default class Lightbox
     public hide(): void
     {
         hide.bind( this )();
-    }
-
-    private buttonCloseClickHandler( event: Event ): void
-    {
-        this.hide()
     }
 }

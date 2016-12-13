@@ -78,3 +78,8 @@ export function documentKeyupHandler( event: KeyboardEvent ): void
 			break;
 	}
 }
+
+export function buttonCloseClickHandler( event: Event ): void
+{
+	this.hide()
+}
