@@ -5,6 +5,7 @@ import {elementPreviewClickHandler, buttonPrevClickHandler, buttonNextClickHandl
 import {getPrevIndex, getNextIndex} from './functions/getters';
 import {setFocusedPreviewByIndex, switchFocusPrev, switchFocusNext} from './functions/focus';
 import {createLightbox, createPrevSlide, createNextSlide} from './functions/creates';
+import {show, hide} from './functions/main';
 
 
 
@@ -178,16 +179,7 @@ export default class Lightbox
      */
     public show(): void
     {
-        this.container.classList.add( constants.CLASS_LIGHTBOX_ACTIVE );
-
-        if ( this.currentSlide )
-        {
-            this.currentSlide.classList.add( constants.CLASS_SLIDE_CURRENT );
-        }
-
-        this.isShown = true;
-
-        document.documentElement.style.overflow = 'hidden';
+        show.bind( this )();
     }
 
     /**
@@ -195,18 +187,7 @@ export default class Lightbox
      */
     public hide(): void
     {
-        this.container.classList.remove( constants.CLASS_LIGHTBOX_ACTIVE );
-
-        document.documentElement.style.overflow = '';
-
-        if ( this.currentSlide )
-        {
-            this.currentSlide.classList.remove( constants.CLASS_SLIDE_CURRENT );
-            this.currentSlide = null;
-        }
-
-        this.isShown = false;
-        this.setFocusedPreviewByIndex( this.currentIndex );
+        hide.bind( this )();
     }
 
     private buttonCloseClickHandler( event: Event ): void
