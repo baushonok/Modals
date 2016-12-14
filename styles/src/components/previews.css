@@ -1,52 +1,38 @@
-.previews
-{
+.previews {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-
 	max-width: 73%;
 	margin: auto;
-
 	vertical-align: top;
-
 	list-style-type: none;
 
-	> li
-	{
+	> li {
 		display: inline-block;
-
 		width: 100px;
 		margin-right: 25px;
 		margin-bottom: 25px;
-
 		cursor: pointer;
-
 		text-align: center;
 
-		&.focused
-		{
+		&.focused {
 			outline: 3px solid $clr-additional;
 		}
 
-		&:last-of-type
-		{
+		&:last-of-type {
 			margin-right: 0;
 			margin-bottom: 0;
 		}
 
-		> img
-		{
+		> img {
 			display: block;
-
 			width: 100px;
 			height: 100px;
 			margin-bottom: 10px;
-
 			object-fit: cover;
 		}
 
-		> span
-		{
+		> span {
 			font-family: $font-regular;
 			font-size: 16px;
 			font-weight: $weight-font-regular;

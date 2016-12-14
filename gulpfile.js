@@ -17,33 +17,40 @@ const gulpUtil = require( 'gulp-util' );
 
 
 
-gulp.task('stylelint', function lintCssTask() {
+function lintCssTask( hasLog ) {
   return gulp
-    .src('./styles/src/**/*.css')
-    .pipe(stylelint({
-      reporters: [
-        {formatter: 'string', console: true}
-      ]
-    }));
-});
+	.src('./styles/src/**/*.css')
+	.pipe(stylelint({
+	  reporters: [
+		{
+			formatter: 'string',
+			console: hasLog
+		}
+	  ]
+	}));
+}
+
+gulp.task('stylelint', lintCssTask.bind( null, true ));
 
 gulp.task('default', function () {
-  return gulp.src('./styles/src/*.css')
-  .pipe(
-        postcss([
-          require('precss')({ /* options */ }),
-          require('postcss-color-function')({ /* options */ })
-        ])
-    )
-    .pipe(autoprefixer({
-		browsers: ['last 2 versions'],
-		cascade: false
-	}))
-	.pipe( cssnano() )
-    .pipe(
-        gulp.dest('./styles/')
-    );
-});
+	lintCssTask( false );
+	return gulp.src('./styles/src/*.css')
+		.pipe(
+			postcss([
+				require('precss')({ /* options */ }),
+				require('postcss-color-function')({ /* options */ })
+			])
+		)
+		.pipe(autoprefixer({
+			browsers: ['last 2 versions'],
+			cascade: false
+		}))
+		.pipe( cssnano() )
+		.pipe(
+			gulp.dest('./styles/')
+		);
+	}
+);
 
 gulp.task(
 	'watch',

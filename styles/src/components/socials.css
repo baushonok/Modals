@@ -1,14 +1,11 @@
 footer > ul.social {
 	position: relative;
 	top: 50%;
-
 	display: block;
-
 	transform: translateY(-50%);
 
 	> li {
 		display: inline-block;
-
 		margin-right: 12px;
 
 		&:last-of-type {
@@ -17,16 +14,12 @@ footer > ul.social {
 
 		> a {
 			$size: 50px;
-
 			display: block;
 			overflow: hidden;
-
 			width: $size;
 			height: $size;
-
 			text-indent: $size;
 			white-space: nowrap;
-
 			background-repeat: no-repeat;
 			background-size: 50px;
 
