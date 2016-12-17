@@ -21,7 +21,8 @@ function lintCssTask( hasLog ) {
   return gulp
 	.src('./styles/src/**/*.css')
 	.pipe(stylelint({
-	  reporters: [
+		failAfterError: false,
+		reporters: [
 		{
 			formatter: 'string',
 			console: hasLog
