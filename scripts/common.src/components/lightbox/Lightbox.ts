@@ -1,8 +1,9 @@
 import {elementPreviewClickHandler, buttonPrevClickHandler, buttonNextClickHandler, keyEnterClickHandler, documentKeyupHandler, buttonCloseClickHandler} from './functions/handlers';
 import {getPrevIndex, getNextIndex} from './functions/getters';
 import {setFocusedPreviewByIndex, switchFocusPrev, switchFocusNext} from './functions/focus';
-import {createLightbox, createPrevSlide, createNextSlide} from './functions/creates';
-import {show, hide} from './functions/main';
+import {createLightbox, createPrevSlide, createNextSlide} from './functions/createSlides';
+import {createElements} from './functions/createElements';
+import {show, hide} from './functions/behaviour';
 
 
 
@@ -50,7 +51,6 @@ export default class Lightbox
         this.isShown = false;
         this.container = container;
         this.previewsList = previewsList;
-        this.lightboxesList = <HTMLOListElement>container.querySelector( 'ol' );
         this.slides = [];
         this.currentIndex = -1;
         this.currentSlide = null;
@@ -58,6 +58,10 @@ export default class Lightbox
         this.currentFocusedIndex = 0;
         this.amountOfSlides = previewsList.childElementCount - 1;
         this.srcMap = srcMap;
+
+        createElements( container, this.amountOfSlides );
+
+        this.lightboxesList = <HTMLOListElement>container.querySelector( 'ol' );
 
         Array.prototype.forEach.call(
             previewsList.querySelectorAll( 'li' ),
