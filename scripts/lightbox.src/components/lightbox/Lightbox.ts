@@ -59,7 +59,7 @@ export default class Lightbox
         this.amountOfSlides = previewsList.childElementCount - 1;
         this.srcMap = srcMap;
 
-        createElements( container, this.amountOfSlides );
+        createElements( container, this.amountOfSlides + 1 );
 
         this.lightboxesList = <HTMLOListElement>container.querySelector( 'ol' );
 
