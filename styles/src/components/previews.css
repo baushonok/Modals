@@ -19,11 +19,6 @@
 			outline: 3px solid $clr-additional;
 		}
 
-		&:last-of-type {
-			margin-right: 0;
-			margin-bottom: 0;
-		}
-
 		> img {
 			display: block;
 			width: 100px;
