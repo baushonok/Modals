@@ -72,8 +72,8 @@ gulp.task(
 		var outputFile;
 		var destinationDir;
 
-		entryFiles = './scripts/common.src/main.ts';
-		outputFile = 'common.js';
+		entryFiles = './scripts/lightbox.src/main.ts';
+		outputFile = 'lightbox.js';
 		destinationDir = './scripts/';
 
 		return browserify(
